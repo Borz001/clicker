@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>Online Clicker Race</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h1>🚗 Online Clicker Race</h1>
+<p>Time left: <span id="timer">30</span></p>
+
+<div id="raceContainer">
+    <div class="line" style="top:0px"></div>
+    <div class="line" style="top:-150px"></div>
+    <div class="line" style="top:-300px"></div>
+
+    <div id="myCar" class="car"></div>
+</div>
+
+<div id="nicknameContainer">
+    <h3>Введите ваш ник:</h3>
+    <input type="text" id="nicknameInput" placeholder="Ваш ник">
+    <button id="startBtn">Старт</button>
+</div>
+
+<div id="game" style="display:none;">
+    <button id="clickBtn">CLICK!</button>
+
+    <h3>Your Score: <span id="myScore">0</span></h3>
+
+    <h3>Players:</h3>
+    <div id="players"></div>
+
+    <h3>Лидерборд:</h3>
+    <div id="myResult"></div>
+</div>
+
+<script>
+const ws = new WebSocket("ws://localhost:8080");
+
+let myId = null;
+let myScore = 0;
+let myNick = "";
+
+const timerEl = document.getElementById("timer");
+const myScoreEl = document.getElementById("myScore");
+const playersEl = document.getElementById("players");
+const myCar = document.getElementById("myCar");
+const raceContainer = document.getElementById("raceContainer");
+const myResultEl = document.getElementById("myResult");
+
+const nicknameInput = document.getElementById("nicknameInput");
+const startBtn = document.getElementById("startBtn");
+const gameDiv = document.getElementById("game");
+const nicknameContainer = document.getElementById("nicknameContainer");
+
+// Старт игры после ввода ника
+startBtn.onclick = () => {
+    const nick = nicknameInput.value.trim();
+    if (!nick) return alert("Введите ник!");
+    myNick = nick;
+    ws.send(JSON.stringify({ type: "join", name: myNick }));
+};
+
+// +1 анимация при клике
+function showPlusOne() {
+    const p = document.createElement("div");
+    p.className = "plusOne";
+    p.innerHTML = "+1";
+    p.style.left = (125 + Math.random()*40) + "px";
+    p.style.bottom = (myScore*5 + 20) + "px";
+    raceContainer.appendChild(p);
+    setTimeout(() => p.remove(), 700);
+}
+
+// Клик
+document.getElementById("clickBtn").onclick = () => {
+    ws.send(JSON.stringify({ type: "click" }));
+    showPlusOne();
+};
+
+// WS сообщения
+ws.onmessage = (msg) => {
+    const data = JSON.parse(msg.data);
+
+    if (data.type === "welcome") {
+        myId = data.id;
+        nicknameContainer.style.display = "none";
+        gameDiv.style.display = "block";
+    }
+
+    if (data.type === "state") {
+        timerEl.textContent = data.timeLeft;
+
+        playersEl.innerHTML = "";
+        myScore = 0;
+
+        data.players.forEach(p => {
+            playersEl.innerHTML += `${p.name}: ${p.score}<br>`;
+            if (p.id === myId) myScore = p.score;
+        });
+
+        myScoreEl.textContent = myScore;
+        myCar.style.bottom = (myScore * 5) + "px";
+    }
+
+    if (data.type === "game_over") {
+        let leaderboard = "";
+        for(const [nick, score] of Object.entries(data.scores)) {
+            leaderboard += `${nick}: ${score}<br>`;
+        }
+        myResultEl.innerHTML = `Результаты всех игроков:<br>${leaderboard}`;
+        alert(`GAME OVER! Победитель: ${data.winner}`);
+    }
+};
+</script>
+
+</body>
+</html>
