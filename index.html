@@ -55,7 +55,6 @@ const startBtn = document.getElementById("startBtn");
 const gameDiv = document.getElementById("game");
 const nicknameContainer = document.getElementById("nicknameContainer");
 
-// Старт игры после ввода ника
 startBtn.onclick = () => {
     const nick = nicknameInput.value.trim();
     if (!nick) return alert("Введите ник!");
@@ -63,7 +62,6 @@ startBtn.onclick = () => {
     ws.send(JSON.stringify({ type: "join", name: myNick }));
 };
 
-// +1 анимация при клике
 function showPlusOne() {
     const p = document.createElement("div");
     p.className = "plusOne";
@@ -74,13 +72,11 @@ function showPlusOne() {
     setTimeout(() => p.remove(), 700);
 }
 
-// Клик
 document.getElementById("clickBtn").onclick = () => {
     ws.send(JSON.stringify({ type: "click" }));
     showPlusOne();
 };
 
-// WS сообщения
 ws.onmessage = (msg) => {
     const data = JSON.parse(msg.data);
 

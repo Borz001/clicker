@@ -2,8 +2,8 @@ const WebSocket = require("ws");
 
 const wss = new WebSocket.Server({ port: 8080 });
 
-let players = {};        // онлайн игроки
-let playerHistory = {};  // все результаты
+let players = {};        
+let playerHistory = {}; 
 const roundTime = 30;
 let timeLeft = roundTime;
 
@@ -25,7 +25,6 @@ function startGameLoop() {
         });
 
         if (timeLeft <= 0) {
-            // сохраняем результаты в историю
             Object.values(players).forEach(p => {
                 playerHistory[p.name] = (playerHistory[p.name] || 0) + p.score;
             });
@@ -38,7 +37,6 @@ function startGameLoop() {
                 scores: playerHistory
             });
 
-            // сброс очков онлайн игроков, таймер обновляется
             for (let id in players) players[id].score = 0;
             timeLeft = roundTime;
         }
