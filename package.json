@@ -13,5 +13,13 @@
   "type": "commonjs",
   "dependencies": {
     "ws": "^8.18.3"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Borz001/clicker.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Borz001/clicker/issues"
+  },
+  "homepage": "https://github.com/Borz001/clicker#readme"
 }

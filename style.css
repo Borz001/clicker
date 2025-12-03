@@ -7,19 +7,16 @@ body {
     font-family: Arial, sans-serif;
     color: white;
 }
-
 h1 {
     margin-top: 20px;
     text-shadow: 0 0 10px #ff5050;
     font-size: 38px;
 }
-
 #game {
     margin-top: 20px;
     width: 400px;
     text-align: center;
 }
-
 #clickBtn {
     padding: 20px 40px;
     font-size: 28px;
@@ -31,18 +28,15 @@ h1 {
     box-shadow: 0 0 15px #ff5a3c;
     transition: 0.1s;
 }
-
 #clickBtn:active {
     transform: scale(0.95);
     box-shadow: 0 0 5px #ff5a3c;
 }
-
 #players {
     margin-top: 20px;
     width: 300px;
     text-align: left;
 }
-
 #raceContainer {
     margin-top: 20px;
     width: 300px;
@@ -52,47 +46,38 @@ h1 {
     position: relative;
     overflow: hidden;
 }
-
+#cars {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+.car {
+    width: 45px;
+    height: 26px;
+    border-radius: 6px;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 0px;
+    box-shadow: 0 0 10px #fff;
+    transition: bottom 0.2s ease-out, left 0.2s ease-out;
+}
+.myCar {
+    box-shadow: 0 0 20px yellow;
+}
 .line {
     position: absolute;
     width: 10px;
     height: 40px;
     background: white;
-    left: 145px;
+    left: calc(50% - 5px);
     opacity: 0.8;
     animation: roadMove 0.6s linear infinite;
 }
-
 @keyframes roadMove {
     from { top: -50px; }
     to   { top: 500px; }
 }
-
-.car {
-    width: 50px;
-    height: 28px;
-    background: linear-gradient(90deg, #ff2222, #ff8800);
-    border-radius: 6px;
-    position: absolute;
-    left: 125px;
-    bottom: 0px;
-    transition: bottom 0.2s ease-out;
-    box-shadow: 0 0 12px #ff5a3c;
-}
-
-.car::before, .car::after {
-    content: "";
-    position: absolute;
-    width: 12px;
-    height: 12px;
-    background: black;
-    border-radius: 50%;
-    bottom: -6px;
-}
-
-.car::before { left: 5px; }
-.car::after { right: 5px; }
-
 .plusOne {
     position: absolute;
     color: #ffdd55;
@@ -101,7 +86,6 @@ h1 {
     text-shadow: 0 0 5px #ffaa00;
     animation: popUp 0.7s ease-out forwards;
 }
-
 @keyframes popUp {
     0% { transform: translateY(0); opacity: 1; }
     100% { transform: translateY(-40px); opacity: 0; }
